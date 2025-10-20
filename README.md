@@ -10,7 +10,7 @@ This is a simple Tic-Tac-Toe implementation used for demonstrating:
 ```bash
 mkdir build
 cd build
-cmake ..
+cmake --build . 
 make
 ```
 
