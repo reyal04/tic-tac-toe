@@ -1,1 +1,5 @@
-
+If you call getCell(-1, 5), it returns ' ' (a space character) or some default value because the coordinates are invalid. The function should handle out-of-range input safely and not access invalid array indices.
+When there is no winner yet, getWinner() returns ' ' (a space character) to indicate that neither player has won the game so far.
+getWinner() is marked const because it only checks the board without changing any class variables. makeMove(), on the other hand, modifies the game state (board contents, move count, and current player), so it cannot be const.
+If the board is full but no player has won, isGameOver() should return true because no more moves can be made — the game has ended in a draw.
+At the start of a new game, getCurrentPlayer() returns 'X', since 'X' always takes the first turn.
