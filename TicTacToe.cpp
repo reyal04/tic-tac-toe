@@ -26,20 +26,20 @@ bool TicTacToe::isFull() const {
 
 char TicTacToe::getWinner() const {
     // Check rows
-    for (int i = 0; i < 3; i++) {
-        if (board[i][0] != ' ' &&
-            board[i][0] == board[i][1] &&
-            board[i][1] == board[i][2]) {
-            return board[i][0];
+    for (int r = 0; r < 3; ++r) {
+        if (board[r][0] != ' ' &&
+            board[r][0] == board[r][1] &&
+            board[r][1] == board[r][2]) {
+            return board[r][0];
         }
     }
 
     // Check columns
-    for (int j = 0; j < 3; j++) {
-        if (board[0][j] != ' ' &&
-            board[0][j] == board[1][j] &&
-            board[1][j] == board[2][j]) {
-            return board[0][j];
+    for (int c = 0; c < 3; ++c) {
+        if (board[0][c] != ' ' &&
+            board[0][c] == board[1][c] &&
+            board[1][c] == board[2][c]) {
+            return board[0][c];
         }
     }
 
@@ -56,8 +56,10 @@ char TicTacToe::getWinner() const {
         return board[0][2];
     }
 
-    return ' ';  // No winner
+    // No winner found
+    return ' ';
 }
+
 
 bool TicTacToe::isGameOver() const {
     return getWinner() != ' ' || isFull();
