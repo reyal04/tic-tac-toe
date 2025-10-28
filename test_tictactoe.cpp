@@ -11,7 +11,7 @@ void test_initial_state() {
         for (int c = 0; c < 3; ++c)
             assert(game.getCell(r, c) == ' ');
     assert(!game.isGameOver());
-    std::cout << "✓ Initial state test passed\n";
+    std::cout << "Initial state test passed\n";
 }
 
 // Test 2: Valid move
@@ -21,7 +21,7 @@ void test_valid_move() {
     assert(game.getCell(0, 0) == 'X');
     assert(game.getCurrentPlayer() == 'O');
     assert(game.getMoveCount() == 1);
-    std::cout << "✓ Valid move test passed\n";
+    std::cout << "Valid move test passed\n";
 }
 
 // Test 3: Invalid moves
@@ -54,7 +54,7 @@ void test_invalid_moves() {
 
     // Move after game over should fail
     assert(!game.makeMove(1, 1));
-    std::cout << "✓ Invalid moves test passed\n";
+    std::cout << "Invalid moves test passed\n";
 }
 
 // Test 4: Winner detection (row)
@@ -67,7 +67,7 @@ void test_winner_detection_row() {
     game.makeMove(0, 2); // X wins row 0
     assert(game.isGameOver());
     assert(game.getWinner() == 'X');
-    std::cout << "✓ Winner detection (row) test passed\n";
+    std::cout << "Winner detection (row) test passed\n";
 }
 
 // Test 5: Winner detection (column)
@@ -81,7 +81,7 @@ void test_winner_detection_column() {
     game.makeMove(2, 0); // O wins column 0
     assert(game.isGameOver());
     assert(game.getWinner() == 'O');
-    std::cout << "✓ Winner detection (column) test passed\n";
+    std::cout << "Winner detection (column) test passed\n";
 }
 
 // Test 6: Winner detection (diagonal)
@@ -94,7 +94,7 @@ void test_winner_detection_diagonal() {
     game.makeMove(2, 2); // X wins diagonal
     assert(game.isGameOver());
     assert(game.getWinner() == 'X');
-    std::cout << "✓ Winner detection (diagonal) test passed\n";
+    std::cout << "Winner detection (diagonal) test passed\n";
 }
 
 // Test 7: Full board, no winner (tie)
@@ -117,7 +117,7 @@ void test_full_board_no_winner() {
     assert(game.isFull());
     assert(game.isGameOver());
     assert(game.getWinner() == ' ');
-    std::cout << "✓ Full board no winner test passed\n";
+    std::cout << "Full board no winner test passed\n";
 }
 
 int main() {
@@ -131,6 +131,6 @@ int main() {
     test_winner_detection_diagonal();
     test_full_board_no_winner();
 
-    std::cout << "\nAll tests passed! ✓\n";
+    std::cout << "\nAll tests passed!\n";
     return 0;
 }
