@@ -1,127 +1,136 @@
 #include "TicTacToe.h"
 #include <iostream>
+#include <cassert>
 
-TicTacToe::TicTacToe() {
-    reset();
-}
-
-void TicTacToe::reset() {
+// Test 1: Initial state
+void test_initial_state() {
+    TicTacToe game;
+    assert(game.getCurrentPlayer() == 'X');
+    assert(game.getMoveCount() == 0);
     for (int r = 0; r < 3; ++r)
         for (int c = 0; c < 3; ++c)
-            board[r][c] = ' ';
-    currentPlayer = 'X';
-    moveCount = 0;
-    winner = ' ';
-    gameOver = false;
+            assert(game.getCell(r, c) == ' ');
+    assert(!game.isGameOver());
+    std::cout << "✓ Initial state test passed\n";
 }
 
-bool TicTacToe::makeMove(int row, int col) {
-    if (gameOver) return false;
-    if (row < 0 || row >= 3 || col < 0 || col >= 3) return false;
-    if (board[row][col] != ' ') return false;
-
-    // Place move
-    board[row][col] = currentPlayer;
-    moveCount++;
-
-    // Check for win
-    if (checkWin(row, col)) {
-        winner = currentPlayer;
-        gameOver = true;
-    }
-    // Check for draw
-    else if (isFull()) {
-        winner = ' '; // No winner in a tie
-        gameOver = true;
-    }
-    else {
-        // Switch turn
-        currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
-    }
-
-    return true;
+// Test 2: Valid move
+void test_valid_move() {
+    TicTacToe game;
+    assert(game.makeMove(0, 0));
+    assert(game.getCell(0, 0) == 'X');
+    assert(game.getCurrentPlayer() == 'O');
+    assert(game.getMoveCount() == 1);
+    std::cout << "✓ Valid move test passed\n";
 }
 
-bool TicTacToe::checkWin(int row, int col) const {
-    char player = board[row][col];
-    if (player == ' ') return false;
+// Test 3: Invalid moves
+void test_invalid_moves() {
+    TicTacToe game;
 
-    // Check row
-    if (board[row][0] == player && board[row][1] == player && board[row][2] == player)
-        return true;
+    // Out of bounds
+    assert(!game.makeMove(-1, 0));
+    assert(!game.makeMove(3, 3));
 
-    // Check column
-    if (board[0][col] == player && board[1][col] == player && board[2][col] == player)
-        return true;
+    // Valid move first
+    assert(game.makeMove(0, 0));
+    assert(game.getMoveCount() == 1);
 
-    // Check diagonals
-    if (board[0][0] == player && board[1][1] == player && board[2][2] == player)
-        return true;
+    // Occupied cell
+    assert(!game.makeMove(0, 0));
 
-    if (board[0][2] == player && board[1][1] == player && board[2][0] == player)
-        return true;
+    // Fill up to end the game
+    game.makeMove(1, 0); // O
+    game.makeMove(0, 1); // X
+    game.makeMove(1, 1); // O
+    game.makeMove(0, 2); // X
+    game.makeMove(1, 2); // O
+    game.makeMove(2, 0); // X
+    game.makeMove(2, 1); // O
+    game.makeMove(2, 2); // X
 
-    return false;
+    // Game is over now
+    assert(game.isGameOver());
+
+    // Move after game over should fail
+    assert(!game.makeMove(1, 1));
+    std::cout << "✓ Invalid moves test passed\n";
 }
 
-bool TicTacToe::isFull() const {
-    return moveCount >= 9;
+// Test 4: Winner detection (row)
+void test_winner_detection_row() {
+    TicTacToe game;
+    game.makeMove(0, 0); // X
+    game.makeMove(1, 0); // O
+    game.makeMove(0, 1); // X
+    game.makeMove(1, 1); // O
+    game.makeMove(0, 2); // X wins row 0
+    assert(game.isGameOver());
+    assert(game.getWinner() == 'X');
+    std::cout << "✓ Winner detection (row) test passed\n";
 }
 
-bool TicTacToe::isGameOver() const {
-    return gameOver;
+// Test 5: Winner detection (column)
+void test_winner_detection_column() {
+    TicTacToe game;
+    game.makeMove(0, 1); // X
+    game.makeMove(0, 0); // O
+    game.makeMove(1, 1); // X
+    game.makeMove(1, 0); // O
+    game.makeMove(2, 2); // X
+    game.makeMove(2, 0); // O wins column 0
+    assert(game.isGameOver());
+    assert(game.getWinner() == 'O');
+    std::cout << "✓ Winner detection (column) test passed\n";
 }
 
-char TicTacToe::getWinner() const {
-    // Recalculate winner just in case
-    for (int r = 0; r < 3; ++r)
-        if (board[r][0] != ' ' &&
-            board[r][0] == board[r][1] &&
-            board[r][1] == board[r][2])
-            return board[r][0];
-
-    for (int c = 0; c < 3; ++c)
-        if (board[0][c] != ' ' &&
-            board[0][c] == board[1][c] &&
-            board[1][c] == board[2][c])
-            return board[0][c];
-
-    if (board[0][0] != ' ' &&
-        board[0][0] == board[1][1] &&
-        board[1][1] == board[2][2])
-        return board[0][0];
-
-    if (board[0][2] != ' ' &&
-        board[0][2] == board[1][1] &&
-        board[1][1] == board[2][0])
-        return board[0][2];
-
-    return ' '; // No winner
+// Test 6: Winner detection (diagonal)
+void test_winner_detection_diagonal() {
+    TicTacToe game;
+    game.makeMove(0, 0); // X
+    game.makeMove(0, 1); // O
+    game.makeMove(1, 1); // X
+    game.makeMove(0, 2); // O
+    game.makeMove(2, 2); // X wins diagonal
+    assert(game.isGameOver());
+    assert(game.getWinner() == 'X');
+    std::cout << "✓ Winner detection (diagonal) test passed\n";
 }
 
-char TicTacToe::getCell(int row, int col) const {
-    if (row < 0 || row >= 3 || col < 0 || col >= 3)
-        return '?';
-    return board[row][col];
+// Test 7: Full board, no winner (tie)
+void test_full_board_no_winner() {
+    TicTacToe game;
+    // Fill board:
+    // X O X
+    // O O X
+    // O X O
+    game.makeMove(0, 0); // X
+    game.makeMove(0, 1); // O
+    game.makeMove(0, 2); // X
+    game.makeMove(1, 0); // O
+    game.makeMove(1, 1); // X
+    game.makeMove(1, 2); // O
+    game.makeMove(2, 0); // X
+    game.makeMove(2, 1); // O
+    game.makeMove(2, 2); // X
+
+    assert(game.isFull());
+    assert(game.isGameOver());
+    assert(game.getWinner() == ' ');
+    std::cout << "✓ Full board no winner test passed\n";
 }
 
-char TicTacToe::getCurrentPlayer() const {
-    return currentPlayer;
-}
+int main() {
+    std::cout << "Running Tic-Tac-Toe tests...\n\n";
 
-int TicTacToe::getMoveCount() const {
-    return moveCount;
-}
+    test_initial_state();
+    test_valid_move();
+    test_invalid_moves();
+    test_winner_detection_row();
+    test_winner_detection_column();
+    test_winner_detection_diagonal();
+    test_full_board_no_winner();
 
-void TicTacToe::printBoard() const {
-    std::cout << "\n";
-    for (int r = 0; r < 3; ++r) {
-        for (int c = 0; c < 3; ++c) {
-            std::cout << " " << board[r][c];
-            if (c < 2) std::cout << " |";
-        }
-        std::cout << "\n";
-        if (r < 2) std::cout << "---+---+---\n";
-    }
-    std::cout << "\n";
+    std::cout << "\nAll tests passed! ✓\n";
+    return 0;
 }
